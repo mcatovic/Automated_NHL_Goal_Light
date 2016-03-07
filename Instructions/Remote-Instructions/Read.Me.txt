@@ -1,0 +1,86 @@
+**NOTE** I never fully tested this method with my light and there may be discrepancies between how the old and new version of the remote look. I did briefly attempt, and get this way to work, before soldering any wires to the remote. I stopped mid way because I noticed my light had a Reset Button. Although my testing was not 100% conclusive because I did not solder, this should work. I am also NOT responsible for any damage that may occur in the process. Attempt at your own risk. This may void the Goal Light's warranty. 
+
+
+
+STEP 1:
+-------
+
+First lets open up the remote. If you flip to the back of the remote there will be 3 small screws to take out. The puck shaped remote will split in half. Refer to picture 2 to how to orientate the remote. Now somewhere near the middle there will be a rubber pad that gets pressed down that you can remove shown in picture 2 and 3. Once you take off that rubber pad you should notice a circuit that looks like an 'E' and a '3'. That's where we will be doing our soldering.
+
+You'll notice if you complete the circuit, by either pressing the rubber pad down, or using a wire connecting the 'E' and the '3' together, the circuit is complete and the light is activated. But we can't simply solder one wire connecting the two because we wouldn't have a way to activate it again. That's why we need a NPN Transistor 2N3904. The transistor acts like a switch when electricity is passed through it. I'm not a genius with transistors but to my understanding that's the basics of it. If you want a full understanding of how they work google it.
+
+The transistor has 3 pins. A Collector, Base, and Emitter. This is IMPORTANT to know which are which. Look at the Transistor_Pinout.jpg I provided to determine which pins are which.
+
+
+
+STEP 2:
+-------
+
+**Note** You will need to strip the male end of the dupont cable so you can get to the wire to solder. (Strip the end that has a needle like pin coming out)
+
+Now we are going to need to solder 2 dupont cables, a resistor, the transistor, and remote all together. I provided a Circuit_Diagram.PNG to visually explain how to connect the 3 together. If you don't understand circuit diagrams here it is in words.
+
+-Collector pin you solder to the 'E' on the remote.
+-Middle base pin solders to the resistor, then the resistor solders to a wire, and finally the wire goes to the input/output on the Raspberry Pi
+-Emitter pin solders to the '3' on the remote. A ground wire is also connected to the transistor pin and goes out to ground on the Raspberry Pi.
+
+Use the Soldering.JPG file and picture 5 as an example of how to connect the transistor, resistor, and wires together. It should look something like that. In picture 4 the orientation of the transistor is (left to right) Collector, Base, Emitter.
+
+**DO NOT SOLDER THE MIDDLE PIN OF THE TRANSISTOR TO THE REMOTE AT ALL!!! Keep note of which color wire is connected to the base and which color wire is connected to the emitter**
+
+Once you solder everything together gently close the remote up with the female ends of the cables sticking out. You may need to drill a hole either on the top or bottom of the puck case to have the wires stick out and have the case close successfully.
+
+
+
+STEP 3:
+-------
+
+Set your favorite team. Open the Scoreboard.py file with an editor of your choice to edit the Python file. You can even do it with Notepad. Just open up Notepad first, go file->open->Scoreboard.py At the very top of the program you should see
+
+team = 'Sabres' #Select the team you want
+
+Simply replace Sabres with the team of your choice and save the file. Make sure you don't change any of the spacing.
+
+
+
+Step 4:
+-------
+
+So now you should have successfully soldered everything together. The end result should look like image 5. (Just imagine it's all soldered together. I never fully completed it this way.) Now it's time to hook it up to the Raspberry Pi. Assuming you already have the Raspberry Pi setup and connected to WiFi, it's time to copy over my Scoreboard.py to a directory of your choice. On your personal computer you will need to install a program called WinSCP. This allows us to remotley connect and transfer files to your Raspberry Pi. Once it's installed, run it, under Host Name type in your Raspberry Pi's IP address. Port number is 22. There shouldn't be a custom username or password unless you changed that when setting up the Raspberry Pi. The default username is pi. Create a new folder somewhere on the Raspberry Pi. I called mine code. In that folder copy over my Scoreboard.py file. The left side of WinSCP is your desktop, and the right is your Raspberry Pi. Simply drag from the left side to the right side. Once it's copied over you can close WinSCP.
+
+ Now on your personal computer again, you will need to install a program called PuTTY, so we can remotely connect to the Raspberry Pi to start the program. Install PuTTY and run it. Where it says host name, type in your Raspberry Pi's IP address, set Port equal to 22, and Connection type SSH. Under Saved Sessions you can name it Raspbperry Pi and hit save, so you don't have to type that in everytime you want to connect. Connect the wire that's soldered to a resistor and to the middle base pin of the transistor to pin 7 on the Raspberry Pi. That is going to be your input/output. Connect the other wire that's soldered to the emitter pin on the transistor to ground (pin 6 on the Raspberry Pi)
+
+Now you're ready to go!
+
+ Launch PuTTY to start the SSH session on the Raspberry Pi.  Navigate to the directory where you saved the file. For example, cd /home/pi/code . Once your in the code folder, run the program with: Python Scoreboard.py and watch the magic happen!
+
+
+-------------------------------------------------------------------------
+**NOTE** You'll want to do this.
+
+If you close PuTTY after starting the program, everything will stop running. So instead of having to leave PuTTY running on your PC 24/7, there is a nifty program called Screen. Screen allows you to start a processes remotely , disconnect from the SSH, and have the instance continue running even after you closed your SSH session. Without this, once you exit the SSH session, all processes are stopped on the Raspberry Pi. Google "Using Screen with Raspberry Pi to avoid leaving SSH sessions open" for more details.
+
+Once you install Screen, here is how you turn on the program once, and leave it running after you exit.
+
+1- Start PuTTY & log on
+2- Create a new 'Screen' by typing
+	screen -SO name_of_your_screen
+	*hit enter*
+3- Navigate to the directory where you saved the file. For example, cd /home/pi/code . Once your in the code folder, run the program with: Python Scoreboard.py
+4- Now you can exit!
+
+After you exit, and want to connect back to that session simply log onto PuTTY and type in
+	screen -r name_of_your_screen
+
+Forgot what you called it? Type in
+	screen -list
+
+To stop and END a screen session hit
+	ctrl + d
+
+
+
+
+I hope this tutorial helped you fully. If you have any questions feel free to email me at momo2477@live.com If you feel inclined to donate, you can donate by following this link paypal.me/mcatovic
+Thanks and enjoy!
+
