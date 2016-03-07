@@ -38,6 +38,8 @@ def main():
 	global refresh_time
 	global team
 	global team_playing
+	global old_score
+	global away_old_score
 	clear_screen()
 	
 	# Format dates to match NHL API style:
@@ -54,7 +56,7 @@ def main():
 				
 			try:
 				r = requests.get(api_url, headers=api_headers) #making sure there is a connection with the API
-			except (requests.ConnectionError): 
+			except (requests.ConnectionError): #Catch these errors
 				print ("Could not get response from NHL.com trying again...")
 				time.sleep(5)
 				continue
@@ -167,7 +169,7 @@ def main():
 							elif 'progress' in game_stage or 'critical' in game_stage:
 								print(Fore.CYAN + away_team_name + ': ' + away_team_score)
 								print(home_team_name + ': ' + home_team_score + Fore.RESET)
-								game_home(home_team_name,home_team_score,game_clock,status)
+								game_home(home_team_name,home_team_score,game_clock,status) 
 								game_away(away_team_name,away_team_score,game_clock,status)
 							
 															
@@ -178,10 +180,12 @@ def main():
 								game_home(home_team_name,home_team_score,game_clock,status)
 								game_away(away_team_name,away_team_score,game_clock,status)
 							print('')
-							if ('FINAL' in status) and (away_team_name == team or home_team_name == team) and (yesterdays_date in game_clock.title() or todays_date in game_clock.title() ):
+							if ('FINAL' in status) and (away_team_name == team or home_team_name == team) and (yesterdays_date in game_clock.title() or todays_date in game_clock.title() ): #Game over, no need to refresh every minute
 								print "Game over!"
 								refresh_time = 21600
 								team_playing = False
+								old_score = 0 
+								away_old_score = 0
 								print "Refresh in: " + str(refresh_time) + " seconds (6 hours)"
 								print "Team playing: " + str(team_playing)
 								print ""
