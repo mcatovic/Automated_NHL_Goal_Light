@@ -1,0 +1,96 @@
+**NOTE** I am NOT responsible for any damage that may occur in the process. Attempt at your own risk. This may void the Goal Light's warranty.
+
+
+If you have the newest version of the Goal Light you will notice there is a Reset Button. In order to save electricity or batteries, if the light isn't activated within 3 hours, the goal light will go into 'Sleep Mode' which disables the remote and all of the lights functions until the reset button is pushed. Obviously NHL teams don't play 24/7 so it would be an inconvenience to have to push that reset button every 3 hours so the program works. These 'Reset Button Instructions' work around that feature so you don't have to press it at all. 
+
+
+If you press the reset button you should notice that the light activates every time it's pressed. So instead of using the remote, we will 'tap into' the reset buttons wires to activate the light that way, and bypass the 'sleep mode' feature. Not only will you have an awesome goal light now, but you'll also save some $$ on batteries or electricity in the processes compared to the old goal light.
+
+
+
+STEP 1:
+--------
+
+Open the goal light from the bottom so we can have access to the reset buttons wires. On the bottom of the goal light there will be 3 rubber pads. Simply pry those off with a flat screw driver to expose the screws underneath. GENTLY separate the light and it's base. You're going to have little wiggle room to work with. They give you just enough wire to slightly lift up the light.
+
+
+Step 2:
+--------
+
+Now that you have the light open, locate the side that has the reset button. It should look something like picture 2 I provided. Here you have the option of either taking the actual button off and stripping the wire to solder to, or you can solder your wires directly ontop of their solder. I chose to solder over their connection because it's just easier to do. Also you can use the button if need be. Now to the hard part, soldering.
+
+
+**Note** You will need to strip the male end of the dupont cable so you can get to the wire to solder. (Strip the end that has a needle like pin coming out)
+
+We are going to need a NPN 3 Pin Transistor 2N3904. The transistor acts like a switch when electricity is passed through it. So instead of physically pushing the button to activate the light, the transistor simulates that. I'm not a genius with transistors but to my understanding that's the basics of it. Use Google to understand how Transistors work.
+
+The transistor has 3 pins. A Collector, Base, and Emitter. This is IMPORTANT to know which are which. Look at the Transistor_Pinout.jpg and picture 3 I provided to determine which pins are which.
+
+
+Now we are going to need to solder 2 dupont cables, a resistor, the transistor, and light all together. I provided a Circuit_Diagram.PNG to visually explain how to connect the 3 together. If you don't understand circuit diagrams here it is in words.
+
+-Collector pin you solder to one of the connections on the reset button inside light. (honestly I have no idea which, I just got lucky when selecting mine. On my light I soldered this pin to the right wire of the button. Test before soldering to make sure you have the right connection.)
+
+-Middle base pin solders to the resistor, then the resistor solders to a wire, and finally the wire goes to the input/output on the Raspberry Pi
+
+-Emitter pin solders to the other wire on the button (mine happens to be the left wire). A ground wire is also connected to the transistor pin and goes out to ground on the Raspberry Pi.
+
+Use pictures 3 and 4 as an example of how to connect the transistor, resistor, and wires together. It should look something similar to mine.
+
+**Keep note of which color wire is connected to the base and which color wire is connected to the emitter**
+
+Once you solder everything together gently close the light with the female ends of the cables sticking out. I have my wires fed through one of the pre-drilled slots for the wall bracket to slide into. You can also gently pry off the reset button from where it's mounted so you can have more ability to move it around the light.
+
+
+Step 3:
+--------
+
+
+Set your favorite team. Open the Scoreboard.py file with an editor of your choice to edit the Python file. You can even do it with Notepad. Just open up Notepad first, go file->open->Scoreboard.py At the very top of the program you should see
+
+team = 'Sabres' #Select the team you want
+
+Simply replace Sabres with the team of your choice and save the file. Make sure you don't change any of the spacing.
+
+
+
+Step 4:
+-------
+
+So now you should have successfully soldered everything together. The end result should look like image 5.  Now it's time to hook it up to the Raspberry Pi. Assuming you already have the Raspberry Pi setup and connected to WiFi, it's time to copy over my Scoreboard.py to a directory of your choice. On your personal computer you will need to install a program called WinSCP. This allows us to remotely connect and transfer files to your Raspberry Pi. Once it's installed, run it, under Host Name type in your Raspberry Pi's IP address. Port number is 22. There shouldn't be a custom username or password unless you changed that when setting up the Raspberry Pi. The default username is pi. Create a new folder somewhere on the Raspberry Pi. I called mine code. In that folder copy over my Scoreboard.py file. The left side of WinSCP is your desktop, and the right is your Raspberry Pi. Simply drag from the left side to the right side. Once it's copied over you can close WinSCP.
+
+ Now on your personal computer again, you will need to install a program called PuTTY, so we can remotely connect to the Raspberry Pi to start the program. Install PuTTY and run it. Where it says host name, type in your Raspberry Pi's IP address, set Port equal to 22, and Connection type SSH. Under Saved Sessions you can name it Raspberry Pi and hit save, so you don't have to type that in every time you want to connect. Connect the wire that's soldered to a resistor and to the middle base pin of the transistor to pin 7 on the Raspberry Pi. That is going to be your input/output. Connect the other wire that's soldered to the emitter pin on the transistor to ground (pin 6 on the Raspberry Pi)
+
+Now you're ready to go!
+
+ Launch PuTTY to start the SSH session on the Raspberry Pi.  Navigate to the directory where you saved the file. For example, cd /home/pi/code . Once your in the code folder, run the program with: Python Scoreboard.py and watch the magic happen!
+
+
+-------------------------------------------------------------------------
+**NOTE** You'll want to do this.
+
+If you close PuTTY after starting the program, everything will stop running. So instead of having to leave PuTTY running on your PC 24/7, there is a nifty program called Screen. Screen allows you to start a processes remotely, disconnect from the SSH, and have the instance continue running even after you closed your SSH session. Without this, once you exit the SSH session, all processes are stopped on the Raspberry Pi. Google "Using Screen with Raspberry Pi to avoid leaving SSH sessions open" for more details.
+
+Once you install Screen, here is how you turn on the program once, and leave it running after you exit.
+
+1- Start PuTTY & log on
+2- Create a new 'Screen' by typing
+	screen -SO name_of_your_screen
+	*hit enter*
+3- Navigate to the directory where you saved the file. For example, cd /home/pi/code . Once your in the code folder, run the program with: Python Scoreboard.py
+4- Now you can exit!
+
+After you exit, and want to connect back to that session simply log onto PuTTY and type in
+	screen -r name_of_your_screen
+
+Forgot what you called it? Type in
+	screen -list
+
+To stop and END a screen session hit
+	ctrl + d
+
+
+
+
+I hope this tutorial helped you fully. If you have any questions feel free to email me at momo2477@live.com If you feel inclined to donate, you can donate by following this link paypal.me/mcatovic
+Thanks and enjoy!
