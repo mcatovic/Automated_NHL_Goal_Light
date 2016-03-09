@@ -37,6 +37,19 @@ Now we are going to need to solder 2 dupont cables, a resistor, the transistor, 
 
 Use pictures 3 and 4 as an example of how to connect the transistor, resistor, and wires together. It should look something similar to mine.
 
+******* IMPORTANT ********
+ 
+I've become aware that I soldered my transistor incorrectly. When referring to picture 4, the transistor orientation left to right is Collector, Base, Emmiter. The green ground wire is suppose to be soldered to the far right Emmiter, and not the left. So still follow the instructions above, just note that my solder is incorrect when using picture 4 as a reference. Here is why it still works even though I soldered incorrectly.
+
+Although a transistor is designed to only be connected in one way, when it is backwards (with emitter/collector swapped), it is still a transistor of the same type. However, it will have limited gain and frequency response in this configuration. If your circuit does not require the full performance of the transistor, it may still well work though. When a bipolar transistor is intentionally operated in this way, it is called reverse active mode.
+
+Transistors aren't directional. So when an NPN transistor is used as an I/O switch by applying current to the base, you're providing a path for current to flow across the collector/emitter junction.
+
+The correct process I described in my 3 steps is called "common emitter" meaning the load is on the collector side. What I've done is a "common collector," meaning I've connected the load to the emitter side. The difference is that you need a higher base voltage to switch the transistor on in common collector mode - it has to be at least 0.7V greater than your load voltage.
+
+****************************************************
+
+
 **Keep note of which color wire is connected to the base and which color wire is connected to the emitter**
 
 Once you solder everything together gently close the light with the female ends of the cables sticking out. I have my wires fed through one of the pre-drilled slots for the wall bracket to slide into. You can also gently pry off the reset button from where it's mounted so you can have more ability to move it around the light.
