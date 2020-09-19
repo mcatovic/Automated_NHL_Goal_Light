@@ -68,7 +68,7 @@ If you want to "set it and forget it" remotely you will have to download this ni
 
 -----------------------------------------------------------------------------------------
 
-I hope this tutorial will help you fully. If you have any questions feel free to email me at momo2477@live.com If you feel inclined to donate, you can donate by following this link paypal.me/mcatovic
+
 Thanks and enjoy!
 
 List of all goals in seconds. The absolute max delay can be 62 seconds. This program refreshes 2 seconds after NHL.com updates their scores. They update their scores every 60 seconds.
